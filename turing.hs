@@ -1,3 +1,5 @@
+-- A dirty implementation of a Turing Machine in Haskell.
+-- TODO: check consistencym, ...
 -- TypeSynonymInstances: use type synonyms in instance definitions
 -- FlexibleInstances: using complex, nested, or multiparameter types in instance definitions
 {-# LANGUAGE TypeSynonymInstances, FlexibleInstances , OverlappingInstances #-}
