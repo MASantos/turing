@@ -78,7 +78,7 @@ instance RwmTape Tape where
       tlen tp = length tp
 
 --Possible states of a finite turing machine
-data Statelabel = Q0 | Q1 | Q2 deriving (Eq,Show)
+data Statelabel = Q0 | Q1 | Q2 | HLT deriving (Eq,Show)
 --Define what a transition on the TM means
 data Transition = Nil | Trans Symbol Symbol HeadMove Statelabel 
 instance Show Transition where 
@@ -126,7 +126,7 @@ class TuringMachine machine where
      graph   :: machine -> IO ()
 
 instance TuringMachine TM where
-     initst tm q = TM { tmQo = q } 
+     initst tm q = tm { tmQo = q } 
      cstate tm = tmQ tm
      step tm = tm { tmQ = q , tmpos = p , tmtape = tp}
              where
@@ -165,7 +165,7 @@ runTM tm tp = do
          putStrLn $ "Starting...\nTape: " ++  (fromTapeToString' tp)
          let thistm = tm{tmtape=tp}
          let loop m 
-                    | (cstate m) /= Q2 = do
+                    | (cstate m) /= HLT = do
                                          --print $ (fromTapeToString' (tmtape m) ) ++ " Q:" ++ show (tmQ m) ++ " P:" ++ show (tmpos m) ++ " S:" ++ (tread (tmtape m) (tmpos m))
                                          printCurrentMachineState m
                                          loop $ step m
@@ -201,9 +201,17 @@ transitions = [
                ,
                (Q2,
                    [
-                    Nil
+                    Trans Zero Zero R Q1
+                   ,
+                    Trans One Zero R Q0
                    ]
                )
+              ,
+              (HLT,
+                   [
+                    Nil
+                   ]
+              )
               ]
 
 turingMach = TM {
