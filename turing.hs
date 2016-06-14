@@ -38,6 +38,12 @@ fromTapeToString' t = "..." ++ (tape2str start) ++ fromTapeToString t ++ (tape2s
                  tape2str Zero = "0"
                  tape2str One = "1"
 
+fromTapeToStringWithLen :: Tape -> (String, Int, Int)
+fromTapeToStringWithLen t = ( str, len , trlen) where
+                          str = fromTapeToString' t
+                          len = length str
+                          trlen = 3 --Ugly hack; should get it from pattern-matching str itself
+
 --Moves available for the head of the tape
 data HeadMove = L | R | S deriving (Eq,Show)
 --position of head along the tape are denoted by integers
@@ -149,7 +155,10 @@ instance TuringMachine TM where
 
 printCurrentMachineState :: TM -> IO ()
 printCurrentMachineState m = do 
-         print  $ (fromTapeToString' (tmtape m) ) ++ " Q:" ++ show (tmQ m) ++ " P:" ++ show (tmpos m) ++ " S:" ++  show (tread (tmtape m) (tmpos m))
+         --print  $ (fromTapeToString' (tmtape m) ) ++ " Q:" ++ show (tmQ m) ++ " P:" ++ show (tmpos m) ++ " S:" ++  show (tread (tmtape m) (tmpos m))
+         let (str_tp , tp_len, tr_len) =  fromTapeToStringWithLen (tmtape m) 
+         putStrLn $ str_tp ++ " Q:" ++ show (tmQ m) ++ " P:" ++ show (tmpos m) ++ " S:" ++  show (tread (tmtape m) (tmpos m))
+         putStrLn $ (concat $ take (tr_len+1+(tmpos m)) $ repeat " ") ++ "."
 --Run a turing machine
 runTM :: TM -> Tape -> IO (TM)
 runTM tm tp = do
@@ -215,7 +224,8 @@ turingMach = TM {
             tmtape=[Blank]
             }
 
-tape = fromStringToTape "1010110011"
+--tape = fromStringToTape "1010110011"
+tape = fromStringToTape "1"
 
 tflips s 
         | s == Zero = One
