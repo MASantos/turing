@@ -197,7 +197,7 @@ printCurrentMachineState m = do
 --Run a turing machine
 runTM :: TM -> Tape -> IO (TM)
 runTM tm tp = do
-         putStrLn $ "Tape: " ++  (fromTapeToString' tp) ++ "\nStarting..."
+         putStrLn $ "Tape:\n" ++  (fromTapeToString' tp) ++ "\nStarting..."
          let thistm = tm{tmtape=tp}
          let loop m 
                     | (cstate m) /= HLT = do
@@ -216,13 +216,31 @@ runTM tm tp = do
 
 ------------------------------------------------------------
 --Example of Turing Machine 
+turingMach = TM {
+             tmQ=Q0  --can be anything, but at the beginning should be initialized to initial state
+            ,
+             tmQo=Q0
+            --,
+            -- tmS=Blank --Idem as for state
+            ,
+             tmSo=Blank
+            ,
+            -- transition table
+             tmD=transitions
+            ,
+             tmpos=0
+            --Initial Blank tape
+            ,
+            tmtape=[Blank]
+            }
+
 transitions :: TransitionTable
 transitions = [
                (Q0,
                    [
                     Trans Zero One R Q1 
                    ,
-                    Trans One One L Q1 
+                    Trans One Zero L Q2 
                    ]
                )
                ,
@@ -249,26 +267,9 @@ transitions = [
               )
               ]
 
-turingMach = TM {
-             tmQ=Q0  --can be anything, but at the beginning should be initialized to initial state
-            ,
-             tmQo=Q0
-            --,
-            -- tmS=Blank --Idem as for state
-            ,
-             tmSo=Blank
-            ,
-            -- transition table
-             tmD=transitions
-            ,
-             tmpos=0
-            --Initial Blank tape
-            ,
-            tmtape=[Blank]
-            }
-
---tape = fromStringToTape "1010110011"
-tape = fromStringToTape "1"
+--tape = fromStringToTape "1010110011001110001110001111000011110000"
+--tape = fromStringToTape "10110010100111000100100010110001101000111100001000"
+tape = fromStringToTape "0101101111"
 
 tflips s 
         | s == Zero = One
