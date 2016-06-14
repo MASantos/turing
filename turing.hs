@@ -31,7 +31,8 @@ fromTapeToString t@(s:ss) = (tape2str s) ++ fromTapeToString ss
 
 --with leading start symbol
 fromTapeToString' :: Tape -> String
-fromTapeToString' t = (tape2str start) ++ "." ++ fromTapeToString t ++ "." ++ (tape2str start)
+-- fromTapeToString' t = (tape2str start) ++ "." ++ fromTapeToString t ++ "." ++ (tape2str start)
+fromTapeToString' t = "..." ++ (tape2str start) ++ fromTapeToString t ++ (tape2str start) ++ "..."
                  where
                  tape2str Blank = "_"
                  tape2str Zero = "0"
@@ -214,7 +215,7 @@ turingMach = TM {
             tmtape=[Blank]
             }
 
-tape = fromStringToTape "1110110011"
+tape = fromStringToTape "1010110011"
 
 tflips s 
         | s == Zero = One
